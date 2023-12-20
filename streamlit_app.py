@@ -149,16 +149,9 @@ def main():
          for i in popularity.index:
              album_art_url = get_deezer_album_art(popularity['artist'][i], popularity['title'][i])
 
-             st.sidebar.image(album_art_url,width=50) 
-             st.sidebar.markdown(
-                 f"""
-                 <div class="container">
-                     #<img class="album-art" src="album_art_url">
-                     <p class="song-title">{popularity['title'][i]} by {popularity['artist'][i]}</p>
-                 </div>
-                 """,
-                 unsafe_allow_html=True
-             )
+             st.sidebar.image(album_art_url,width=50)
+             st.sidebar.write(f"Title: {popularity['title'][i]}")
+             st.sidebar.write(f"Artist/Artists: {popularity['artist'][i]}")
              st.sidebar.markdown("---") 
 
     # Display welcome page if no song title provided
