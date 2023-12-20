@@ -5,8 +5,9 @@ Welcome to the Music Recommender App, Streaks Music! This application allows you
 
 ## Getting Started
 
-1. Launch the app and start by selecting a song title from the provided list.
-2. Click the 'Recommend' button to receive personalized music recommendations.
+1. Check-out the app here, [**Streaks-Music**](https://streaks-music.streamlit.app/)
+2. Launch the app and start by selecting a song title from the provided list.
+3. Click the 'Recommend' button to receive personalized music recommendations.
 
 ## App Information
 
