@@ -111,31 +111,72 @@ def main():
     st.title("Music Recommender App")
 
    # Sidebar with user input using a select box
-    st.sidebar.header("Music Recommender by Streaks V.1.1")
-    song_title = st.sidebar.selectbox("Select a song title:", unique_song_names)
+    st.sidebar.header("Music Recommender by Streaks V.2.0")
+    song_title = st.sidebar.selectbox("Select a song title:", unique_song_names,index=None)
+    selected=[]
 
-    #Storing Selected song detials
-    selected=mini.loc[mini["title"] == song_title].values.flatten().tolist()
-
-    #To get Album Art of Selected Song
-    selected_album_art_url = get_deezer_album_art(selected[2],selected[0])
-    if selected_album_art_url:
-        st.sidebar.image(selected_album_art_url, caption=f"Album Art for {selected[0]}")
+    if song_title == None:
+         pass
     else:
-        st.sidebar.warning("No album art found.")
-    # To get music details of selected song
-    selected_mb=search_musicbrainz(selected[2],selected[0])
-    st.sidebar.write(f"Title: {selected_mb[0]}")
-    st.sidebar.write(f"Artist/Artists: {selected_mb[1]}")
-    st.sidebar.write(f"Release Date: {selected_mb[2]}")
-    st.sidebar.write(f"Genre: {selected[1]}")
-    
-    recommend_button = st.sidebar.button("Recommend")
+
+         #Storing Selected song detials
+         selected=mini.loc[mini["title"] == song_title].values.flatten().tolist()
+
+         #To get Album Art of Selected Song
+         selected_album_art_url = get_deezer_album_art(selected[2],selected[0])
+         if selected_album_art_url:
+             st.sidebar.image(selected_album_art_url, caption=f"Album Art for {selected[0]}")
+         else:
+             st.sidebar.warning("No album art found.")
+              
+         # To get music details of selected song
+         selected_mb=search_musicbrainz(selected[2],selected[0])
+         st.sidebar.write(f"Title: {selected_mb[0]}")
+         st.sidebar.write(f"Artist/Artists: {selected_mb[1]}")
+         st.sidebar.write(f"Release Date: {selected_mb[2]}")
+         st.sidebar.write(f"Genre: {selected[1]}")
+         
+         recommend_button = st.sidebar.button("Recommend")
+
+    # Top songs in that year
+         st.sidebar.header(f"The Selected song is from {selected[3]}")
+         st.sidebar.subheader(f"Top 10 Songs from {selected[3]} are:")
+         popularity=pd.DataFrame()
+         popularity=mini.sort_values('views',ascending=False)
+         popularity=popularity[popularity['year']== selected[3]]
+         popularity=popularity.head(10)
+         popularity=popularity[['title','artist']]
+         for i in popularity.index:
+             album_art_url = get_deezer_album_art(popularity['artist'][i], popularity['title'][i])
+            
+             st.sidebar.markdown(
+                 f"""
+                 <div class="container">
+                     <img class="album-art" src="album_art_url">
+                     <p class="song-title">{popularity['title'][i]} by {popularity['artist'][i]}</p>
+                 </div>
+                 """,
+                 unsafe_allow_html=True
+             )
+             st.sidebar.markdown("---") 
 
     # Display welcome page if no song title provided
     if not song_title or not recommend_button:
         st.header("Welcome to the Music Recommender App")
         st.markdown("Select a song title from the list and click the 'Recommend' button to get music recommendations.")
+
+        # Top 50 Songs
+        st.subheader("Top 50 songs of all time")
+        popularity=pd.DataFrame()
+        popularity=mini.sort_values('views',ascending=False)
+        popularity=popularity.head(50)
+        popularity=popularity[['title','artist','views']]
+        # Create a scrollable textbox
+        song_list = ""
+        for i in popularity.index:
+            song_list += f"{popularity['title'][i]} by {popularity['artist'][i]} with {popularity['views'][i]:,} likes\n"
+
+        st.text_area("", song_list, height=200) 
 
         # Information about the app
         st.subheader("App Information:")
