@@ -112,7 +112,7 @@ def main():
 
    # Sidebar with user input using a select box
     st.sidebar.header("Music Recommender by Streaks V.2.0")
-    song_title = st.sidebar.selectbox("Select a song title:", unique_song_names,index=None)
+    song_title = st.sidebar.selectbox("Select a song title:", unique_song_names,index=None,label_visibility='hidden')
     selected=[]
 
     if song_title == None:
@@ -148,11 +148,12 @@ def main():
          popularity=popularity[['title','artist']]
          for i in popularity.index:
              album_art_url = get_deezer_album_art(popularity['artist'][i], popularity['title'][i])
-            
+
+             st.sidebar.image(album_art_url,width=50) 
              st.sidebar.markdown(
                  f"""
                  <div class="container">
-                     <img class="album-art" src="album_art_url">
+                     #<img class="album-art" src="album_art_url">
                      <p class="song-title">{popularity['title'][i]} by {popularity['artist'][i]}</p>
                  </div>
                  """,
